@@ -1,371 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="ViTacWorld: Scaling Visuo-Tactile World Models for Contact-Rich Robot Manipulation."
-    />
-    <meta
-      name="keywords"
-      content="ViTacWorld, visuo-tactile world model, contact-rich manipulation, robot learning"
-    />
-    <meta name="theme-color" content="#ffffff" />
-    <title>ViTacWorld</title>
-    <link rel="stylesheet" href="./static/css/index.css" />
-  </head>
-  <body>
-    <main>
-      <header class="hero">
-        <div class="container hero__inner">
-          <h1>
-            ViTacWorld: Scaling Visuo-Tactile World Models for Contact-Rich
-            Robot Manipulation
-          </h1>
-
-          <div class="authors" aria-label="Authors">
-            <a href="mailto:huangya2024@shanghaitech.edu.cn">Yunao Huang<sup>1,2</sup></a>
-            <a href="mailto:sangshy2025@shanghaitech.edu.cn">Shiyu Sang<sup>1,2</sup></a>
-            <a href="mailto:luht2025@shanghaitech.edu.cn">Haotao Lu<sup>1</sup></a>
-            <a href="mailto:nist2024@shanghaitech.edu.cn">Suting Ni<sup>1</sup></a>
-            <a href="mailto:wushj12023@shanghaitech.edu.cn">Shijie Wu<sup>1</sup></a>
-            <a href="mailto:guozy12025@shanghaitech.edu.cn">Ziyang Guo<sup>1</sup></a>
-            <a href="mailto:shiye@shanghaitech.edu.cn">Ye Shi<sup>1,2</sup></a>
-            <a href="mailto:wangjingya@shanghaitech.edu.cn">Jingya Wang<sup>1,*</sup></a>
-          </div>
-
-          <div class="affiliations">
-            <span><sup>1</sup> ShanghaiTech University</span>
-            <span><sup>2</sup> InstAdapt</span>
-            <span><sup>*</sup> Corresponding author</span>
-          </div>
-
-          <div class="links" aria-label="Project links">
-            <a
-              class="button"
-              href="https://arxiv.org/pdf/2607.22530"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open the ViTacWorld paper PDF on arXiv"
-            >
-              <span class="button__icon" aria-hidden="true">PDF</span>
-              <span>Paper</span>
-            </a>
-            <a
-              class="button"
-              href="https://arxiv.org/abs/2607.22530"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open the ViTacWorld arXiv abstract page"
-            >
-              <span class="button__icon button__icon--text" aria-hidden="true">arXiv</span>
-              <span>arXiv</span>
-            </a>
-            <span class="button button--pending" aria-label="Code repository coming soon">
-              <span class="button__icon button__icon--text" aria-hidden="true">GitHub</span>
-              <span>Coming Soon</span>
-            </span>
-          </div>
-        </div>
-      </header>
-
-      <section class="section section--abstract" id="abstract">
-        <div class="container container--text">
-          <h2>Abstract</h2>
-          <p>
-            Contact-rich robot manipulation requires physical interaction cues that are often
-            invisible to cameras, making tactile sensing essential for robust control. However,
-            scaling visuo-tactile robot learning remains difficult because real tactile interaction
-            data are expensive to collect, hardware-dependent, and limited in task and scene
-            diversity. We present <strong>ViTacWorld</strong>, an action-conditioned visuo-tactile
-            world model for scalable contact-rich robot manipulation. ViTacWorld leverages public
-            real tactile datasets and a constructed simulation environment to scale
-            visuo-tactile-action data, exploiting the fact that tactile signals are directly grounded
-            in physical contact and can exhibit a smaller simulation-to-real gap than purely visual
-            observations. The model is first pretrained with large-scale real and simulated
-            visuo-tactile trajectories, and then finetuned with real-world policy rollouts to better
-            match downstream manipulation behaviors. Given robot actions, ViTacWorld predicts
-            temporally aligned visual observations and tactile feedback, enabling
-            visuo-tactile-action rollout generation. To the best of our knowledge, ViTacWorld is the
-            first framework that uses a world model for robot visuo-tactile-action trajectory
-            generation and policy evaluation. It serves two roles: synthesizing rollouts to improve
-            downstream tactile policies, and evaluating policies by predicting action-conditioned
-            visuo-tactile outcomes under controlled action sequences. Experiments on contact-rich
-            manipulation tasks show that ViTacWorld generates physically meaningful rollouts,
-            improves policy performance through scalable data augmentation, and enables
-            action-conditioned policy evaluation.
-          </p>
-        </div>
-      </section>
-
-      <section class="section" id="video">
-        <div class="container container--media">
-          <div class="section-heading">
-            <h2>Video</h2>
-          </div>
-          <div class="video-frame">
-            <video controls preload="metadata" playsinline>
-              <source
-                src="./static/videos/vitacworld-teaser.mp4?v=1080p-20260727"
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section--muted" id="pipeline">
-        <div class="container">
-          <div class="section-heading">
-            <h2>Method</h2>
-          </div>
-          <figure class="pipeline-figure">
-            <a
-              href="./static/papers/pipeline_arxiv.pdf"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Open the ViTacWorld pipeline figure as a PDF"
-            >
-              <img
-                src="./static/images/pipeline.png"
-                alt="Overview of the ViTacWorld architecture, pretraining and finetuning pipeline, and its use for policy improvement and evaluation."
-              />
-            </a>
-            <figcaption>
-              <strong>Figure 1: Overview of ViTacWorld.</strong> Right side shows scaling
-              training pipeline, where real visuo-tactile data and task-aligned simulation
-              data are used for pretraining, followed by real robot task data and policy
-              rollout data for target-domain tuning. Left side illustrates the
-              action-conditioned visuo-tactile world model and its rollout generation
-              process. Visual and tactile streams are encoded into latent tokens and
-              modeled with a view-aware DiT to produce policy-conditioned rollouts, which
-              support both dataset augmentation and policy evaluation.
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section class="section" id="results">
-        <div class="container">
-          <div class="section-heading">
-            <h2>Results</h2>
-          </div>
-
-          <section class="result-block" aria-labelledby="policy-improvement-title">
-            <div class="result-block__heading">
-              <h3 id="policy-improvement-title">Policy Improvement with Generated Rollouts</h3>
-              <p>
-                ViTacWorld-generated visuo-tactile rollouts provide additional supervision
-                for downstream policies. Repeating the dream-data augmentation process with
-                a stronger rollout policy yields further gains.
-              </p>
-            </div>
-
-            <div class="metric-strip" aria-label="Average success rate of the tactile pi 0.5 policy">
-              <div class="metric">
-                <span class="metric__value">42.5%</span>
-                <span class="metric__label">Expert only</span>
-              </div>
-              <span class="metric-strip__arrow" aria-hidden="true">→</span>
-              <div class="metric">
-                <span class="metric__value">67.5%</span>
-                <span class="metric__label">+ Round-1 rollouts</span>
-              </div>
-              <span class="metric-strip__arrow" aria-hidden="true">→</span>
-              <div class="metric metric--best">
-                <span class="metric__value">80.0%</span>
-                <span class="metric__label">+ Round-2 rollouts</span>
-              </div>
-            </div>
-
-            <div class="table-card">
-              <div class="table-scroll" tabindex="0" aria-label="Scrollable policy improvement results table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th scope="col">Data source</th>
-                      <th scope="col">Method</th>
-                      <th scope="col">Charger<br />Plugging</th>
-                      <th scope="col">Cucumber<br />Peeling</th>
-                      <th scope="col">U-Block<br />Insertion</th>
-                      <th scope="col">Cuboid<br />Insertion</th>
-                      <th scope="col">Avg.</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="rowgroup" rowspan="3">Expert only</th>
-                      <th scope="row">ACT + tactile</th>
-                      <td>0</td><td>0</td><td>30</td><td>30</td><td>15.0</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">π<sub>0.5</sub></th>
-                      <td>10</td><td>30</td><td>60</td><td>40</td><td>35.0</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">π<sub>0.5</sub> + tactile</th>
-                      <td>20</td><td>40</td><td>70</td><td>40</td><td>42.5</td>
-                    </tr>
-                    <tr class="group-start">
-                      <th scope="rowgroup" rowspan="3">Expert +<br />Round-1 rollouts</th>
-                      <th scope="row">ACT + tactile</th>
-                      <td>10</td><td>20</td><td>40</td><td>40</td><td>27.5</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">π<sub>0.5</sub></th>
-                      <td>30</td><td>60</td><td>60</td><td>40</td><td>47.5</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">π<sub>0.5</sub> + tactile</th>
-                      <td>40</td><td>80</td><td>80</td><td>70</td><td>67.5</td>
-                    </tr>
-                    <tr class="group-start">
-                      <th scope="rowgroup" rowspan="3">Expert +<br />Round-2 rollouts</th>
-                      <th scope="row">ACT + tactile</th>
-                      <td>20</td><td>50</td><td>50</td><td>50</td><td>42.5</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">π<sub>0.5</sub></th>
-                      <td>40</td><td>80</td><td><strong>90</strong></td><td>50</td><td>65.0</td>
-                    </tr>
-                    <tr class="best-row">
-                      <th scope="row">π<sub>0.5</sub> + tactile</th>
-                      <td><strong>60</strong></td><td><strong>90</strong></td>
-                      <td><strong>90</strong></td><td><strong>80</strong></td>
-                      <td><strong>80.0</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p class="table-caption">
-                <strong>Real-robot success rates (%).</strong> Additional dream-data
-                augmentation results. Success rates are reported in percentage.
-                “Round-1 rollouts” denotes the ViTacWorld-generated rollouts used in the
-                main paper. “Round-2 rollouts” further adds a second round of dream
-                rollouts generated by the first-round augmented π<sub>0.5</sub> + tactile
-                policy.
-              </p>
-            </div>
-
-            <figure class="result-figure">
-              <a href="./static/papers/figure2-policy-improvement.pdf" target="_blank" rel="noreferrer">
-                <img
-                  src="./static/images/figure2-policy-improvement.png"
-                  alt="Expert-only and ViTacWorld-augmented tactile policies compared over a real-robot rollout."
-                />
-              </a>
-              <figcaption>
-                <strong>Figure 2: Qualitative comparison of real-robot rollouts using the
-                same π<sub>0.5</sub> + tactile policy architecture.</strong> The top row
-                shows the policy trained only with expert demonstrations, while the bottom
-                row shows the policy trained with the same expert demonstrations augmented
-                by ViTacWorld-generated rollouts.
-              </figcaption>
-            </figure>
-
-            <figure class="result-figure result-figure--portrait">
-              <a href="./static/papers/figure5-additional-rollouts.pdf" target="_blank" rel="noreferrer">
-                <img
-                  src="./static/images/figure5-additional-rollouts.png"
-                  alt="Additional expert-only and ViTacWorld-augmented policy comparisons across contact-rich robot tasks."
-                />
-              </a>
-              <figcaption>
-                <strong>Figure 5: Additional qualitative comparisons of real-robot
-                rollouts across contact-rich tasks.</strong> For each task, the top row
-                shows the π<sub>0.5</sub> + tactile policy trained only with expert
-                demonstrations, while the bottom row shows the same policy architecture
-                trained with expert demonstrations augmented by ViTacWorld-generated
-                rollouts. The augmented policy produces more reliable pickup, alignment,
-                and contact adjustment behaviors, leading to successful task completion in
-                cases where the expert-only policy fails.
-              </figcaption>
-            </figure>
-          </section>
-
-          <section class="result-block" aria-labelledby="world-model-quality-title">
-            <div class="result-block__heading">
-              <h3 id="world-model-quality-title">Visuo-Tactile World Model Quality</h3>
-              <p>
-                Pretraining improves action-conditioned prediction across the main view,
-                wrist view, and tactile stream. Task-aligned simulation further improves
-                object geometry, motion consistency, and contact prediction.
-              </p>
-            </div>
-
-            <figure class="result-figure">
-              <img
-                src="./static/images/figure3-world-model-quality.jpg"
-                alt="Ground-truth and predicted visual, wrist, and tactile observations from ViTacWorld and ablated variants."
-              />
-              <figcaption>
-                <strong>Figure 3: Qualitative world-model predictions on held-out
-                validation clips.</strong> The model receives the first observation frame
-                and the logged action sequence, then predicts future visual and tactile
-                observations.
-              </figcaption>
-            </figure>
-          </section>
-
-          <section class="result-block" aria-labelledby="policy-evaluation-title">
-            <div class="result-block__heading">
-              <h3 id="policy-evaluation-title">Policy Evaluation with ViTacWorld</h3>
-              <p>
-                Starting from the same initial conditions, ViTacWorld predicts policy
-                outcomes close to real-robot execution and provides a conservative
-                evaluation signal before deployment.
-              </p>
-            </div>
-
-            <div class="table-card table-card--compact">
-              <div class="table-scroll" tabindex="0" aria-label="Scrollable policy evaluation results table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th scope="col">Evaluation source</th>
-                      <th scope="col">Charger<br />Plugging</th>
-                      <th scope="col">Cucumber<br />Peeling</th>
-                      <th scope="col">U-Block<br />Insertion</th>
-                      <th scope="col">Cuboid<br />Insertion</th>
-                      <th scope="col">Avg.</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">Real World</th>
-                      <td>40</td><td>80</td><td>80</td><td>70</td><td>67.5</td>
-                    </tr>
-                    <tr class="evaluation-row">
-                      <th scope="row">ViTacWorld</th>
-                      <td>30</td><td>60</td><td>70</td><td>70</td><td>57.5</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p class="table-caption">
-                <strong>Policy evaluation with ViTacWorld.</strong> Success rates are
-                reported in percentage. We evaluate the first-round augmented
-                π<sub>0.5</sub> + tactile policy. Real-robot success rates are measured over
-                10 trials per task. ViTacWorld uses the same initial observations and
-                samples three imagined rollouts per initial condition; the predicted
-                outcome is assigned by majority vote.
-              </p>
-            </div>
-          </section>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="container footer__inner">
-        <span>ViTacWorld</span>
-        <span>
-          This website is borrowed from
-          <a href="https://github.com/nerfies/nerfies.github.io" target="_blank" rel="noopener noreferrer">nerfies</a>.
-        </span>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ViTacWorld — Visuo-Tactile World Models</title>
+  <meta name="description" content="ViTacWorld generates action-conditioned vision and touch for tactile policy improvement and evaluation in contact-rich robot manipulation.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="ViTacWorld: Scaling Visuo-Tactile World Models for Contact-Rich Robot Manipulation">
+  <meta property="og:description" content="Imagining vision and touch to improve and evaluate tactile robot policies.">
+  <meta property="og:image" content="https://vitacworld.github.io/static/images/video-poster.webp">
+  <meta property="og:url" content="https://vitacworld.github.io/">
+  <meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://vitacworld.github.io/">
+  <link rel="stylesheet" href="./static/css/arxiv-20260928.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="site-nav" aria-label="Page sections"><a class="nav-brand" href="#top">ViTacWorld</a>
+    <div><a href="#video">Video</a><a href="#method">Method</a><a href="#improvement">Improvement</a><a href="#evaluation">Evaluation</a><a href="#quality">Ablations</a></div>
+  </nav>
+  <main id="main">
+    <header class="hero container" id="top">
+      <img class="wordmark" src="./static/images/vitacworld-wordmark.webp" width="1050" height="237" alt="ViTacWorld">
+      <h1><span class="sr-only">ViTacWorld: </span>Scaling Visuo-Tactile World Models<br class="wide-break"> for Contact-Rich Robot Manipulation</h1>
+      <div class="authors" aria-label="Authors in paper order">
+        <a href="mailto:huangya2024@shanghaitech.edu.cn">Yunao Huang<sup>1,2</sup></a>
+        <a href="mailto:sangshy2025@shanghaitech.edu.cn">Shiyu Sang<sup>1,2</sup></a>
+        <a href="mailto:nist2024@shanghaitech.edu.cn">Suting Ni<sup>1</sup></a>
+        <a href="mailto:luht2025@shanghaitech.edu.cn">Haotao Lu<sup>1</sup></a>
+        <span class="author-break" aria-hidden="true"></span>
+        <a href="mailto:wushj12023@shanghaitech.edu.cn">Shijie Wu<sup>1</sup></a>
+        <a href="mailto:lvrui2026@shanghaitech.edu.cn">Rui Lv<sup>1</sup></a>
+        <a href="mailto:guozy12025@shanghaitech.edu.cn">Ziyang Guo<sup>1</sup></a>
+        <a href="mailto:shiye@shanghaitech.edu.cn">Ye Shi<sup>1,2</sup></a>
+        <a href="mailto:wangjingya@shanghaitech.edu.cn">Jingya Wang<sup>1,*</sup></a>
       </div>
-    </footer>
-  </body>
+      <p class="affiliations"><span><sup>1</sup> ShanghaiTech University</span><span><sup>2</sup> InstAdapt</span><span><sup>*</sup> Corresponding author</span></p>
+      <div class="project-links">
+        <a class="button" href="https://arxiv.org/pdf/2607.22530" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z M14 3v5h4 M10 12h5 M10 16h5"/></svg>Paper</a>
+        <a class="button" href="https://arxiv.org/abs/2607.22530" target="_blank" rel="noopener noreferrer"><span class="arxiv-icon" aria-hidden="true">χ</span>arXiv</a>
+        <a class="button" href="#video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7z"/></svg>Video</a>
+        <span class="button pending" title="Research code is not yet released">Code · coming soon</span>
+      </div>
+      <p class="hero-summary">A world model that imagines <span class="visual">vision</span> and <span class="tactile">touch</span><br>to improve and evaluate tactile robot policies.</p>
+    </header>
+
+    <section class="container video-section" id="video" aria-labelledby="video-title">
+      <h2 class="sr-only" id="video-title">Video overview</h2>
+      <div class="video-frame"><video controls playsinline preload="metadata" poster="./static/images/video-poster.webp" aria-label="ViTacWorld research overview video">
+        <source src="./static/videos/vitacworld-arxiv-20260928.mp4" type="video/mp4">
+        Your browser does not support embedded video. <a href="./static/videos/vitacworld-arxiv-20260928.mp4">Download the video.</a>
+      </video></div>
+      <div class="video-caption"><span>Action-conditioned vision and touch for contact-rich manipulation.</span><a href="./static/videos/vitacworld-arxiv-20260928.mp4" download>Download video ↗</a></div>
+      <div class="role-links">
+        <a href="#improvement"><span class="role-number">01</span><div><strong>Tactile policy improvement</strong><span>Learn from generated visuo-tactile rollouts.</span></div><span class="role-arrow" aria-hidden="true">↗</span></a>
+        <a href="#evaluation"><span class="role-number">02</span><div><strong>Tactile policy evaluation</strong><span>Compare policies through imagined executions.</span></div><span class="role-arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="section" id="abstract"><div class="container text-width"><h2>Abstract</h2>
+      <p>Contact-rich robot manipulation requires physical interaction cues that are often invisible to cameras, making tactile sensing essential for robust control. However, scaling visuo-tactile robot learning remains difficult because real tactile interaction data are expensive to collect, hardware-dependent, and limited in task and scene diversity. We present <strong>ViTacWorld</strong>, an action-conditioned visuo-tactile world model for scalable contact-rich robot manipulation. ViTacWorld leverages public real tactile datasets and a constructed simulation environment to scale visuo-tactile-action data, exploiting the fact that tactile signals are directly grounded in physical contact and can exhibit a smaller simulation-to-real gap than purely visual observations. The model is first pretrained with large-scale real and simulated visuo-tactile trajectories, and then finetuned with real-world policy rollouts to better match downstream manipulation behaviors. Given robot actions, ViTacWorld predicts temporally aligned visual observations and tactile feedback, enabling visuo-tactile-action rollout generation. To the best of our knowledge, ViTacWorld is the first framework that uses a world model for robot visuo-tactile-action trajectory generation and policy evaluation. It serves two roles: synthesizing rollouts to improve downstream tactile policies, and evaluating policies by predicting action-conditioned visuo-tactile outcomes under controlled action sequences. Experiments on contact-rich manipulation tasks show that ViTacWorld generates physically meaningful rollouts, improves policy performance through scalable data augmentation, and enables action-conditioned policy evaluation.</p>
+    </div></section>
+
+    <section class="section muted-section" id="method"><div class="container">
+      <div class="section-heading"><span class="eyebrow">The world model</span><h2>Generating vision and touch, together</h2><p>Robot actions condition temporally aligned predictions of the main view, wrist view, and tactile observations.</p></div>
+      <figure><a href="./static/papers/pipeline_v8.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open the method figure PDF"><img src="./static/images/pipeline-current.webp" alt="ViTacWorld architecture and training pipeline, from real and simulated visuo-tactile pretraining to policy-rollout finetuning and downstream applications." loading="lazy"></a>
+        <figcaption>ViTacWorld combines a view-aware diffusion transformer with real and simulated visuo-tactile pretraining, followed by real-world policy-rollout finetuning. The same action-conditioned world model supports both policy improvement and policy evaluation.</figcaption>
+      </figure>
+    </div></section>
+
+    <section class="section" id="improvement"><div class="container">
+      <div class="section-heading"><span class="eyebrow">01 / Policy improvement</span><h2>Generated touch improves tactile policies</h2><p>Success increases across four contact-rich tasks and two policy architectures, with further gains from a second augmentation round.</p></div>
+      <div class="stage-strip" aria-label="Four-task mean success rate of tactile pi 0.5">
+        <div><span>Expert only</span><strong>43.0<small>%</small></strong></div><span class="stage-arrow" aria-hidden="true">→</span>
+        <div><span>+ Round 1</span><strong>67.5<small>%</small></strong></div><span class="stage-arrow" aria-hidden="true">→</span>
+        <div class="stage-best"><span>+ Round 2</span><strong>79.5<small>%</small></strong></div>
+      </div>
+      <p class="protocol"><strong>50 real-robot trials per task, policy, and training stage.</strong> Each round adds 200 selected generated rollouts to the 300 expert demonstrations, yielding 500 and 700 training trajectories.</p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Real-robot success rates table; scroll horizontally on small screens">
+        <table id="policy-table"><caption>Real-robot success rates (%). Avg. is the unweighted four-task mean.</caption>
+          <thead><tr><th scope="col">Training data</th><th scope="col">Policy</th><th scope="col">Charger<br>Plugging</th><th scope="col">Cucumber<br>Peeling</th><th scope="col">U-Block<br>Insertion</th><th scope="col">Cuboid<br>Insertion</th><th scope="col">Avg.</th></tr></thead>
+          <tbody><tr class=""><th rowspan="3" scope="rowgroup">Expert only</th><th scope="row">ACT + tactile</th><td>4</td><td>8</td><td>32</td><td>24</td><td>17.0</td></tr><tr class=""><th scope="row">π<sub>0.5</sub></th><td>18</td><td>28</td><td>48</td><td>28</td><td>30.5</td></tr><tr class="tactile-row"><th scope="row">π<sub>0.5</sub> + tactile</th><td>20</td><td>44</td><td>72</td><td>36</td><td>43.0</td></tr></tbody>
+<tbody><tr class=""><th rowspan="3" scope="rowgroup">Expert +<br>Round-1 rollouts</th><th scope="row">ACT + tactile</th><td>14</td><td>22</td><td>36</td><td>32</td><td>26.0</td></tr><tr class=""><th scope="row">π<sub>0.5</sub></th><td>34</td><td>60</td><td>68</td><td>42</td><td>51.0</td></tr><tr class="tactile-row"><th scope="row">π<sub>0.5</sub> + tactile</th><td>44</td><td>82</td><td>80</td><td>64</td><td>67.5</td></tr></tbody>
+<tbody><tr class=""><th rowspan="3" scope="rowgroup">Expert +<br>Round-2 rollouts</th><th scope="row">ACT + tactile</th><td>26</td><td>44</td><td>68</td><td>50</td><td>47.0</td></tr><tr class=""><th scope="row">π<sub>0.5</sub></th><td>44</td><td>72</td><td>82</td><td>62</td><td>65.0</td></tr><tr class="best-row"><th scope="row">π<sub>0.5</sub> + tactile</th><td><strong>64</strong></td><td><strong>86</strong></td><td><strong>94</strong></td><td><strong>74</strong></td><td><strong>79.5</strong></td></tr></tbody>
+        </table>
+      </div>
+      <div class="finding"><strong>Matched rollouts. A larger gain with tactile observations.</strong><p>The vision-only and tactile π<sub>0.5</sub> policies use the same selected visual–action rollouts; only the tactile policy receives the generated tactile stream. Gains over their respective expert-only baselines are <strong>24.5 vs. 20.5 percentage points</strong> after round 1 and <strong>36.5 vs. 34.5 points</strong> after round 2. Tactile π<sub>0.5</sub> also achieves higher success on every task at every training stage.</p></div>
+      <figure><a href="./static/papers/figure2-policy-improvement.pdf" target="_blank" rel="noopener noreferrer"><img src="./static/images/figure2-policy-improvement.png" alt="Expert-only tactile policy fails a contact-rich task; the same architecture trained with generated rollouts completes it." loading="lazy"></a><figcaption><strong>From expert-only to augmented policies.</strong> Real-robot rollouts show more stable grasping and contact-phase corrections after visuo-tactile augmentation.</figcaption></figure>
+      <details class="extra-results"><summary>More real-robot rollout comparisons</summary><figure><a href="./static/papers/figure5-additional-rollouts.pdf" target="_blank" rel="noopener noreferrer"><img src="./static/images/figure5-additional-rollouts.png" alt="Additional expert-only versus augmented tactile policy comparisons across contact-rich tasks." loading="lazy"></a><figcaption>Additional qualitative examples from the same policy-improvement study.</figcaption></figure></details>
+    </div></section>
+
+    <section class="section muted-section" id="evaluation"><div class="container">
+      <div class="section-heading"><span class="eyebrow">02 / Policy evaluation</span><h2>Imagined performance tracks real performance</h2><p>Three tactile π<sub>0.5</sub> checkpoints, four tasks, and 50 matched initial states per checkpoint–task combination.</p></div>
+      <div class="evaluation-layout">
+        <figure><a href="./static/papers/policy-evaluation.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open the correlation figure PDF"><img src="./static/images/policy-evaluation.png" alt="Scatter plot of 12 real and imagined success rates, with Pearson r 0.863, Spearman rho 0.790, a fitted line, and marginal 95 percent Wilson confidence intervals." loading="lazy"></a></figure>
+        <div class="evaluation-copy">
+          <div class="correlation-stats"><div><span>Pearson r</span><strong>0.863</strong></div><div><span>Spearman ρ</span><strong>0.790</strong></div></div>
+          <p><strong>12 aggregate points from 600 real–imagined pairs.</strong> Each imagined execution starts from the recorded initial state and observation of a real trial, using the same policy checkpoint.</p>
+          <p>Both evaluations rank the checkpoints <strong>expert-only &lt; round 1 &lt; round 2</strong> within every task.</p>
+          <p class="small-note">Mean absolute error is 12.33 percentage points, with an average underestimation of 9.0 points. These results support relative policy comparison, rather than exact success-rate calibration or trial-level agreement.</p>
+        </div>
+      </div>
+      <p class="figure-note">Colors and marker shapes denote tasks; marker fill denotes training stage. Error bars show marginal 95% Wilson confidence intervals. The dashed line is y = x; the solid line is the least-squares fit.</p>
+      <details class="extra-results"><summary>View the 12 real–imagined success-rate pairs</summary>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Paired real and imagined success rates">
+          <table id="evaluation-table"><caption>Real / imagined success rate (%); 50 executions per source and condition.</caption><thead><tr><th scope="col">Tactile π<sub>0.5</sub> checkpoint</th><th scope="col">Charger</th><th scope="col">Cucumber</th><th scope="col">U-Block</th><th scope="col">Cuboid</th></tr></thead><tbody>
+            <tr><th scope="row">Expert only</th><td>20 / 10</td><td>44 / 30</td><td>72 / 64</td><td>36 / 54</td></tr>
+            <tr><th scope="row">Round 1</th><td>44 / 30</td><td>82 / 58</td><td>80 / 72</td><td>64 / 60</td></tr>
+            <tr><th scope="row">Round 2</th><td>64 / 48</td><td>86 / 60</td><td>94 / 90</td><td>74 / 76</td></tr>
+          </tbody></table>
+        </div>
+      </details>
+      <figure class="evaluation-example"><img src="./static/images/evaluation-example.webp" alt="One shared initial observation, a failed real U-Block insertion, and three independently imagined rollouts predicting failure." loading="lazy"><figcaption><strong>A matched U-Block insertion example.</strong> Real execution and three independently sampled imagined rollouts all fail. This qualitative illustration is separate from the one-imagined-execution-per-initial-state quantitative protocol above.</figcaption></figure>
+    </div></section>
+
+    <section class="section" id="quality"><div class="container">
+      <div class="section-heading"><span class="eyebrow">World-model quality</span><h2>Consistent visual and tactile predictions</h2><p>Pretraining, task-aligned simulation, and cross-view attention contribute to prediction quality.</p></div>
+      <div class="finding compact"><strong>Evaluate contact, not long static trajectories.</strong><p>All variants are evaluated on the <strong>same held-out contact-transition clips</strong>, rather than full trajectories, to reduce score inflation from prolonged non-contact segments.</p></div>
+      <figure><img src="./static/images/figure3-world-model-quality.jpg" alt="Ground truth and generated main-view, wrist-view, and tactile observations for full and ablated world models." loading="lazy"><figcaption>Given the first observation and logged actions, each model predicts future visual and tactile observations.</figcaption></figure>
+      <div class="table-scroll quality-table" tabindex="0" role="region" aria-label="World-model quality ablation table">
+        <table id="quality-table"><caption>Prediction quality on held-out contact-transition clips. Bold indicates the best value within each view.</caption><thead><tr><th scope="col">View</th><th scope="col">Model variant</th><th scope="col">PSNR ↑</th><th scope="col">SSIM ↑</th><th scope="col">LPIPS ↓</th></tr></thead>
+          <tbody><tr class=""><th rowspan="4" scope="rowgroup">Main</th><th scope="row">w/o pretraining</th><td>22.718</td><td>0.7859</td><td>0.0781</td></tr><tr class=""><th scope="row">w/o task-aligned simulation</th><td>23.128</td><td>0.8011</td><td>0.0687</td></tr><tr class=""><th scope="row">w/o cross-view attention</th><td>23.653</td><td><strong>0.8290</strong></td><td>0.0611</td></tr><tr class="tactile-row"><th scope="row">Full ViTacWorld</th><td><strong>24.258</strong></td><td>0.8286</td><td><strong>0.0513</strong></td></tr></tbody>
+<tbody><tr class=""><th rowspan="4" scope="rowgroup">Wrist</th><th scope="row">w/o pretraining</th><td>21.080</td><td>0.6649</td><td>0.1084</td></tr><tr class=""><th scope="row">w/o task-aligned simulation</th><td>21.434</td><td>0.6869</td><td>0.0901</td></tr><tr class=""><th scope="row">w/o cross-view attention</th><td>21.853</td><td>0.6913</td><td>0.0854</td></tr><tr class="tactile-row"><th scope="row">Full ViTacWorld</th><td><strong>21.925</strong></td><td><strong>0.6962</strong></td><td><strong>0.0725</strong></td></tr></tbody>
+<tbody><tr class=""><th rowspan="4" scope="rowgroup">Tactile</th><th scope="row">w/o pretraining</th><td>34.967</td><td>0.9204</td><td>0.0211</td></tr><tr class=""><th scope="row">w/o task-aligned simulation</th><td>35.127</td><td>0.9296</td><td>0.0179</td></tr><tr class=""><th scope="row">w/o cross-view attention</th><td>35.220</td><td>0.9310</td><td>0.0163</td></tr><tr class="tactile-row"><th scope="row">Full ViTacWorld</th><td><strong>35.225</strong></td><td><strong>0.9318</strong></td><td><strong>0.0157</strong></td></tr></tbody>
+        </table>
+      </div>
+      <p class="table-note">Replacing cross-view attention with self-attention throughout increases LPIPS in all three streams. Main-view SSIM is nearly unchanged (0.8286 vs. 0.8290); the full model is not best on every metric.</p>
+    </div></section>
+
+    <section class="section citation-section" id="citation"><div class="container text-width"><h2>Citation</h2><pre><code>@article{huang2026vitacworld,
+  title={ViTacWorld: Scaling Visuo-Tactile World Models for
+         Contact-Rich Robot Manipulation},
+  author={Huang, Yunao and Sang, Shiyu and Ni, Suting and
+          Lu, Haotao and Wu, Shijie and Lv, Rui and
+          Guo, Ziyang and Shi, Ye and Wang, Jingya},
+  journal={arXiv preprint arXiv:2607.22530},
+  year={2026}
+}</code></pre></div></section>
+  </main>
+  <footer><div class="container"><span>ViTacWorld · ShanghaiTech University &amp; InstAdapt</span><p>Project-page design inspired by <a href="https://nerfies.github.io/" target="_blank" rel="noopener noreferrer">Nerfies</a> and <a href="https://humanx-interaction.github.io/" target="_blank" rel="noopener noreferrer">Human-X</a>. Updated September 2026.</p></div></footer>
+</body>
 </html>
